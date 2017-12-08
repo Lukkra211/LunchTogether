@@ -21,7 +21,7 @@ class Event(models.Model):
 class User(models.Model):
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
-    event = models.ForeignKey(Event)
+    event = models.ForeignKey(Event, null=True)
 
     def right_user(self, username, password):
         if username == self.username and self.password == password:
