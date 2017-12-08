@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def login(request):
     if request.method == "GET":
-        return HttpResponse("Get metoda k ničemu")
+        return render(request, "../templates/login.html")
     if request.method == "POST":
         username = request.POST.get("username", "")
         password = request.POST.get("password", "")
@@ -25,7 +25,7 @@ def login(request):
 
 def register(request):
     if request.method == "GET":
-        return HttpResponse("Get metoda k ničemu")
+        return render(request, "../templates/register.html")
     if request.method == "POST":
         username = request.POST.get("username", "")
         password = request.POST.get("password", "")
@@ -44,7 +44,7 @@ def register(request):
 def homepage(request):
     if request.method == "GET":
         all_events = Event.objects.all()
-        return HttpResponse("Get metoda k ničemu")
+        return render(request,"../templates/index.html",{"all_events":all_events})
     if request.method == "POST":
         return HttpResponse("Get metoda k ničemu")
 
@@ -72,20 +72,20 @@ def join_event(request):
 
 def search_user(request):
     if request.method == "GET":
-        return render(request, '../templates/graphs.html', )
+        return render(request, '../templates/graphs.static', )
     if request.method == "POST":
         friend = request.POST.get("username", "")
         username = request.session['username']
         User.objects.get(username=username).add_friend(friend)
 
-        return render(request, '../templates/graphs.html',
+        return render(request, '../templates/graphs.static',
                       {
                       })
 
 
 def search_restaurant(request):
     if request.method == "GET":
-        return render(request, '../templates/graphs.html',
+        return render(request, '../templates/graphs.static',
                       {})
     if request.method == "POST":
         sort_by_rating = request.POST.get("sort", True)
@@ -94,5 +94,5 @@ def search_restaurant(request):
         restaurants = Restaurant.objects.filter(TagRestaurant=TagRestaurant.objects.get(name=tag), name__contains=name)
         if sort_by_rating:
             restaurants = restaurants.order_by('rating__aggregate_rating')
-        return render(request, '../templates/graphs.html',
+        return render(request, '../templates/graphs.static',
                       {"restaurants": restaurants})
