@@ -9,7 +9,7 @@ from ...models import Restaurant, TagRestaurant, Location, Rating, RestaurantHas
 class Command(BaseCommand):
     def handle(self, *args, **options):
         for i in range(5):
-            response = query_api.Query().search_restaurant(entity_id=94, entity_type="city", start=20 * i)
+            response = query_api.Query().search_restaurant(entity_id=93, entity_type="city", start=20 * i)
             if response != {}:
                 for restaurant in response["restaurants"]:
                     info = restaurant["restaurant"]

@@ -28,8 +28,8 @@ class Location(models.Model):
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=60)
-    location = models.ForeignKey(Location, null=True)
-    rating = models.ForeignKey(Rating, null=True)
+    location = models.ForeignKey(Location, blank=True, null=True)
+    rating = models.ForeignKey(Rating, blank=True, null=True)
     has_table_booking = models.BooleanField(default=True)
     has_online_delivery = models.BooleanField(default=True)
     average_cost_for_two = models.CharField(max_length=60)
@@ -57,7 +57,7 @@ class RestaurantHasTagRestaurant(models.Model):
 class Event(models.Model):
     time = models.DateTimeField()
     note = models.TextField(max_length=300)
-    restaurant = models.ForeignKey(Restaurant, null=True)
+    restaurant = models.ForeignKey(Restaurant, blank=True, null=True)
 
     def __str__(self):
         return str(self.time) + " - " + str(self.restaurant)
@@ -83,8 +83,8 @@ class User(models.Model):
     password = models.CharField(max_length=30)
     mail = models.EmailField()
 
-    event = models.ForeignKey(Event, null=True)
-    friends = models.ManyToManyField("self")
+    event = models.ForeignKey(Event, blank=True, null=True)
+    friends = models.ManyToManyField("self", blank=True)
 
     def right_user(self, username, password):
         if username == self.username and self.password == password:
