@@ -7,7 +7,6 @@ for i in range(5):
         for restaurant in response["restaurants"]:
             info= restaurant["restaurant"]
             print(info)
-            """
             print(info["average_cost_for_two"])
             print(info["currency"])
             print(info["user_rating"])
@@ -20,4 +19,3 @@ for i in range(5):
             print(info["name"])
             print(info["url"])
             print(info["location"])
-            """
