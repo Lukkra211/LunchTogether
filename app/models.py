@@ -84,7 +84,7 @@ class User(models.Model):
     mail = models.EmailField()
 
     event = models.ForeignKey(Event, blank=True, null=True)
-    friends = models.ManyToManyField("self", blank=True)
+    frineds = models.ManyToManyField("self", through='Contact', symmetrical=False, related_name="contact_set")
 
     def right_user(self, username, password):
         if username == self.username and self.password == password:
@@ -98,3 +98,12 @@ class User(models.Model):
 
     def __str__(self):
         return str(self.username)
+
+
+class Contact(models.Model):
+    user1 = models.ForeignKey(User, related_name="contact_set1")
+    user2 = models.ForeignKey(User, related_name="contact_set2")
+    confirmed = models.BooleanField()
+
+    def __str__(self):
+        return str(self.user1) + " - " + str(self.user2)
