@@ -12,3 +12,11 @@ class User(models.Model):
         if username == self.username and self.password == password:
             return True
         return False
+
+    def get_id(self):
+        return self.id
+
+    def is_registred(self, username):
+        if username == self.username:
+            return True
+        return False

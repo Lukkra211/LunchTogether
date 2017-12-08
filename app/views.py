@@ -12,8 +12,9 @@ def login(request):
     if request.method == "GET":
         return HttpResponse("Get metoda k ničemu")
     if request.method == "POST":
-        username = request.POST.get("username","")
-        password = request.POST.get("password","")
+        username = request.POST.get("username", "")
+        password = request.POST.get("password", "")
+        logger.error(username)
         for user in User.objects.all():
             if user.right_user(username, password):
                 # account found
@@ -23,4 +24,20 @@ def login(request):
 
 
 def register(request):
-    return False
+    if request.method == "GET":
+        return HttpResponse("Get metoda k ničemu")
+    if request.method == "POST":
+        username = request.POST.get("username", "")
+        password = request.POST.get("password", "")
+        logger.error(username)
+        for user in User.objects.all():
+            if user.is_registred(username):
+                return HttpResponse("Tento uživatel je již registrován")
+        if username != "" and password != "":
+            User(username=username,password=password).save()
+            return HttpResponse("")
+        return HttpResponse("Chyba: zadal prázdný jsi email nebo heslo")
+
+
+def homepage(request):
+    pass
