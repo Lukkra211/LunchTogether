@@ -1,6 +1,7 @@
 from django.db import models
 
 
+
 class Rating(models.Model):
     aggregate_rating = models.FloatField()
     rating_text = models.CharField(max_length=60)
@@ -25,11 +26,16 @@ class Location(models.Model):
     def __str__(self):
         return str(self.address)
 
+class TagRestaurant(models.Model):
+    name = models.CharField(max_length=30)
+
+
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=60)
     location = models.ForeignKey(Location, blank=True, null=True)
     rating = models.ForeignKey(Rating, blank=True, null=True)
+    TagRestaurant = models.ForeignKey(TagRestaurant, null=True)
     has_table_booking = models.BooleanField(default=True)
     has_online_delivery = models.BooleanField(default=True)
     average_cost_for_two = models.CharField(max_length=60)
@@ -79,10 +85,11 @@ class EventHasTag(models.Model):
         return str(self.tag) + " - " + str(self.event)
 
 
+
 class User(models.Model):
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
-    mail = models.EmailField()
+    mail = models.EmailField(default="")
 
     event = models.ForeignKey(Event, blank=True, null=True)
     friends = models.ManyToManyField('self', through='Relationship',
