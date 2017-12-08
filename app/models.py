@@ -56,6 +56,7 @@ class RestaurantHasTagRestaurant(models.Model):
 
 class Event(models.Model):
     time = models.DateTimeField()
+    name = models.CharField(max_length=60)
     note = models.TextField(max_length=300)
     restaurant = models.ForeignKey(Restaurant, blank=True, null=True)
 
@@ -84,8 +85,9 @@ class User(models.Model):
     mail = models.EmailField()
 
     event = models.ForeignKey(Event, blank=True, null=True)
-    frineds = models.ManyToManyField("self", through='Contact', symmetrical=False, related_name="contact_set")
-
+    friends = models.ManyToManyField('self', through='Relationship',
+                                           symmetrical=False,
+                                           related_name='related_to')
     def right_user(self, username, password):
         if username == self.username and self.password == password:
             return True
@@ -99,11 +101,19 @@ class User(models.Model):
     def __str__(self):
         return str(self.username)
 
+    def add_friend(self, person):
+        relationship, created = Relationship.objects.get_or_create(
+            from_person=self,
+            to_person=person)
+        return relationship
 
-class Contact(models.Model):
-    user1 = models.ForeignKey(User, related_name="contact_set1")
-    user2 = models.ForeignKey(User, related_name="contact_set2")
-    confirmed = models.BooleanField()
+    def remove_friend(self, person):
+        Relationship.objects.filter(
+            from_person=self,
+            to_person=person).delete()
+        return
 
-    def __str__(self):
-        return str(self.user1) + " - " + str(self.user2)
+
+class Relationship(models.Model):
+    from_person = models.ForeignKey(User, related_name='from_people')
+    to_person = models.ForeignKey(User  , related_name='to_people')
