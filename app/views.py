@@ -43,21 +43,21 @@ def register(request):
 
 def homepage(request):
     if request.method == "GET":
-        Event.objects.get()
+        all_events = Event.objects.all()
         return HttpResponse("Get metoda k ničemu")
     if request.method == "POST":
         return HttpResponse("Get metoda k ničemu")
 
+
 def create_event(request):
     if request.method == "GET":
-
         return HttpResponse("Get metoda k ničemu")
     if request.method == "POST":
         tag = request.POST.get("tag", "")
         time = request.POST.get("time", "")
         name = request.POST.get("name", "")
         note = request.POST.get("note", "")
-        event=Event.objects.get_or_create(time=time,tag=tag,name=name,note=note)[0]
+        event = Event.objects.get_or_create(time=time, tag=tag, name=name, note=note)[0]
         return HttpResponse("Get metoda k ničemu")
 
 
@@ -66,13 +66,13 @@ def join_event(request):
         tag = request.POST.get("time", "")
         name = request.POST.get("name", "")
         username = request.session['username']
-        User.objects.get(username=username).update(event=Event.objects.filter(tag=tag,name=name))
+        User.objects.get(username=username).update(event=Event.objects.filter(tag=tag, name=name))
         return HttpResponse("Get metoda k ničemu")
 
 
 def search_user(request):
     if request.method == "GET":
-        return render(request, '../templates/graphs.html',)
+        return render(request, '../templates/graphs.html', )
     if request.method == "POST":
         friend = request.POST.get("username", "")
         username = request.session['username']
@@ -88,11 +88,11 @@ def search_restaurant(request):
         return render(request, '../templates/graphs.html',
                       {})
     if request.method == "POST":
-        sort_by_rating=request.POST.get("sort",True)
+        sort_by_rating = request.POST.get("sort", True)
         tag = request.POST.get("tag", "")
         name = request.POST.get("name", "")
-        restaurants=Restaurant.objects.filter(TagRestaurant=TagRestaurant.objects.get(name=tag),name__contains=name)
+        restaurants = Restaurant.objects.filter(TagRestaurant=TagRestaurant.objects.get(name=tag), name__contains=name)
         if sort_by_rating:
-            restaurants=restaurants.order_by('rating__aggregate_rating')
+            restaurants = restaurants.order_by('rating__aggregate_rating')
         return render(request, '../templates/graphs.html',
-                      {"restaurants":restaurants})
+                      {"restaurants": restaurants})
