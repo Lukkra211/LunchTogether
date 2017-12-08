@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secret title</title>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="css/style.css"  media="screen,projection"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+    <nav style="background: rgba(0,0,0,0.31)">
+        <div class="nav-wrapper container">
+            <a href="index.html" class="brand-logo center">Lunch Together</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="login.html">Login</a></li>
+                <li><a href="register.html">Register</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="container">
+            <div class="card-panel action-panel">
+                <form method="post">
+                    <div class="row">
+                        <div class="col s8 offset-s2">
+                            <h4>Register</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s8 offset-s2">
+                            <input id="register_username" type="text" class="validate">
+                            <label for="register_username">Email</label>
+                        </div>
+                        <div class="input-field col s8 offset-s2">
+                            <input id="register_password" type="password" class="validate">
+                            <label for="register_password">Heslo</label>
+                        </div>
+                        <div class="input-field col s8 offset-s2">
+                            <input id="register_password_rep" type="password" class="validate">
+                            <label for="register_password_rep">Heslo znovu</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button class="btn red col s8 offset-s2">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        $(document).ready(function () {
+            $("#register-submit").click(function () {
+                var registerData = {
+                    username: $("#register_username"),
+                    password: $("#register_password"),
+                    password_rep: $("#register_password_rep")
+                };
+
+                $.post("http://localhost/register", registerData, function (data) {
+                    if (data === "")
+                    {
+                        Materialize.toast(data, 3000);
+                    }
+                    else
+                    {
+                        window.location = "/index.html";
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+</body>
+</html>

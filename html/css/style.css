@@ -1,0 +1,37 @@
+body {
+  background-image: url(https://ak6.picdn.net/shutterstock/videos/9448376/thumb/1.jpg);
+  background-size: 100% auto;
+}
+
+.custom-red {
+  background-color: #b71c1c;
+}
+
+#nav-mobile > li:hover {
+  background-color: rgba(183, 28, 28, 0.8);
+}
+
+.action-panel {
+  margin-top: 2rem;
+  padding-bottom: 3em;
+  padding-top: 2em;
+}
+
+.active-people {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: auto;
+  height: 5rem;
+  background: #b71c1c;
+  border-radius: 0 0 0 75%;
+  text-align: center;
+  line-height: 4.5rem;
+  color: white;
+  font-size: 2rem;
+  padding-left: 1.8rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  box-shadow: -8px 8px 25px 0px rgba(0,0,0,0.75);
+}
+
