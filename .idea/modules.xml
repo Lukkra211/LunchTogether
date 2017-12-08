@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/LunchTogether.iml" filepath="$PROJECT_DIR$/.idea/LunchTogether.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../smart_exchange_web/.idea/smart_exchange_web.iml" filepath="$PROJECT_DIR$/../smart_exchange_web/.idea/smart_exchange_web.iml" />
     </modules>
   </component>
 </project>
