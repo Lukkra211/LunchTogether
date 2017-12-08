@@ -26,11 +26,6 @@ class Location(models.Model):
     def __str__(self):
         return str(self.address)
 
-class TagRestaurant(models.Model):
-    name = models.CharField(max_length=30)
-
-
-
 class Restaurant(models.Model):
     name = models.CharField(max_length=60)
     location = models.ForeignKey(Location, blank=True, null=True)
