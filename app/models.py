@@ -30,7 +30,6 @@ class Restaurant(models.Model):
     name = models.CharField(max_length=60)
     location = models.ForeignKey(Location, blank=True, null=True)
     rating = models.ForeignKey(Rating, blank=True, null=True)
-    TagRestaurant = models.ForeignKey(TagRestaurant, null=True)
     has_table_booking = models.BooleanField(default=True)
     has_online_delivery = models.BooleanField(default=True)
     average_cost_for_two = models.CharField(max_length=60)
@@ -56,7 +55,7 @@ class RestaurantHasTagRestaurant(models.Model):
 
 
 class Event(models.Model):
-    time = models.DateTimeField()
+    time = models.TimeField()
     name = models.CharField(max_length=60)
     note = models.TextField(max_length=300)
     restaurant = models.ForeignKey(Restaurant, blank=True, null=True)
