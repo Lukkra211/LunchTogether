@@ -62,8 +62,19 @@ def create_event(request):
         time = request.POST.get("time", "")
         name = request.POST.get("name", "")
         note = request.POST.get("note", "")
-        event = Event.objects.get_or_create(time=time, tag=tag, name=name, note=note)[0]
+        Event(time=time, tag=tag, name=name, note=note).save()
+        return redirect("/homepage")
+
+def search_event(request):
+    if request.method == "GET":
         return HttpResponse("Get metoda k ničemu")
+    if request.method == "POST":
+        tag = request.POST.get("tag", "")
+        time = request.POST.get("time", "")
+        name = request.POST.get("name", "")
+        note = request.POST.get("note", "")
+        event = Event.objects.filter(time=time, tag=tag, name=name, note=note)[0]
+        return render(request,"../templates/index.html",{"all_events":event})
 
 
 def join_event(request):
@@ -77,14 +88,12 @@ def join_event(request):
 
 def search_user(request):
     if request.method == "GET":
-        return render(request, '../templates/graphs.static', )
+        return render(request, '../templates/index.html', )
     if request.method == "POST":
         friend = request.POST.get("username", "")
         username = request.session['username']
         User.objects.get(username=username).add_friend(friend)
-
-        return render(request, '../templates/graphs.static',
-                      {})
+        return redirect("/homepage")
 
 def logout(request):
     print("test")
