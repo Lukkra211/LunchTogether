@@ -41,14 +41,10 @@
                 <div class="card-image">
                     <img src="" style="background: darkred">
                     <span class="card-title">{{event.name}}</span>
-                    <div class="active-people"></div>
+                    <div class="active-people">{{event.rating.aggregate_rating}}</div>
                 </div>
                 <div class="card-content">
-                    <span class="right"> </span>
                     {{event.note}}
-                    <br><br>
-                    <div>
-                    </div>
                 </div>
             </div>
         </div>
