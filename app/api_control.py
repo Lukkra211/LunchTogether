@@ -38,3 +38,23 @@ def login(request):
                 request.session["username"] = username
                 return JsonResponse({"user_id": user.id})
         return JsonResponse({"user_id": "-1"})
+
+def search_event(request):
+    if request.method == "GET":
+        return HttpResponse("Get metoda k ničemu")
+    if request.method == "POST":
+        tag = request.POST.get("tag", "")
+        time_from = request.POST.get("time_from", "")
+        time_to = request.POST.get("time_to", "")
+        name = request.POST.get("name", "")
+        event = Event.objects.all()
+        if tag:
+            event.filter(tag=tag)
+        if time_from:
+            event.filter(time__gte=time_from,time__lte=time_to)
+        if tag:
+            event.filter(name=name)
+        if tag:
+            event.filter(tag=tag)
+
+        return HttpResponse(event)

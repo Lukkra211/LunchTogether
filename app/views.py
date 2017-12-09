@@ -49,7 +49,7 @@ def homepage(request):
         if not request.session["username"]:
             return redirect("/login")
         all_events = Event.objects.all()
-        return render(request,"../templates/index.html",{"all_events":all_events})
+        return render(request, "../templates/index.html", {"all_events": all_events})
     if request.method == "POST":
         return HttpResponse("Get metoda k ničemu")
 
@@ -65,16 +65,24 @@ def create_event(request):
         Event(time=time, tag=tag, name=name, note=note).save()
         return redirect("/homepage")
 
+
 def search_event(request):
     if request.method == "GET":
         return HttpResponse("Get metoda k ničemu")
     if request.method == "POST":
         tag = request.POST.get("tag", "")
-        time = request.POST.get("time", "")
+        time_from = request.POST.get("time_from", "")
+        time_to = request.POST.get("time_to", "")
         name = request.POST.get("name", "")
-        note = request.POST.get("note", "")
-        event = Event.objects.filter(time=time, tag=tag, name=name, note=note)[0]
-        return render(request,"../templates/index.html",{"all_events":event})
+        event = Event.objects.all()
+        if tag:
+            event = event.filter(tag=tag)
+        if time_from:
+            event = event.filter(time__gte=time_from, time__lte=time_to)
+        if name:
+            event = event.filter(name=name)
+
+        return render(request, "../templates/index.html", {"all_events": event})
 
 
 def join_event(request):
@@ -95,10 +103,12 @@ def search_user(request):
         User.objects.get(username=username).add_friend(friend)
         return redirect("/homepage")
 
+
 def logout(request):
     print("test")
-    request.session['username']=""
+    request.session['username'] = ""
     return redirect("/login")
+
 
 def search_restaurant(request):
     if request.method == "GET":
