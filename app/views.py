@@ -1,6 +1,8 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.http import JsonResponse
 from app.models import User, Event, Restaurant, TagRestaurant
+
+from itertools import combinations
 import logging
 
 logger = logging.getLogger(__name__)
@@ -108,6 +110,33 @@ def create_event(request):
         return redirect("/homepage")
 
 
+def automate_register(request):
+    if request.method == "GET":
+        return HttpResponse("Get metoda k ničemu")
+    if request.method == "POST":
+        events = Event.objects.all()
+
+        tags = TagEvent.objects.all()
+        tag_string = "ahoj, jidlo".split(", ")
+
+        tag_id_list = set([tag.id() for tag in tags) # {1, 2, 3, 4, 5, 6, 7, 8}
+        user_tags_id = [tag.id() for tag in tags if tag in tag_string] # [1, 3, 8]
+
+        max_tags_wrong = len(tag_id_list) // 2
+
+        for i in range(len(user_tags_id) + 1, max_tags_wrong, -1):
+            best_results = set()
+            for combination in combinations(user_tags_id, i):
+                # combination je každá kombinace tagů, pokus je něco nalezeno, další dekrementace i se neprovádí
+                for event_id in (event.id for event in events):
+                    if len(set(user_tags_id) - EventHasTag.objects.filter(event=event.id)) == 0:
+                        best_results.add(event.id)
+            if len(best_results):
+                break
+        
+
+
+
 def search_event(request):
     if request.method == "GET":
         return HttpResponse("Get metoda k ničemu")
@@ -120,7 +149,9 @@ def search_event(request):
         if tag:
             event = event.filter(tag=tag)
         if time_from:
-            event = event.filter(time__gte=time_from, time__lte=time_to)
+            event = event.filter(time__gte=time_from)
+        if time_to
+            event = event.filter(time__lte=time_to)
         if name:
             event = event.filter(name=name)
 

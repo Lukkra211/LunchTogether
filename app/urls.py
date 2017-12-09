@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^api/login', api_control.login, name="login"),
     url(r'^api/register', api_control.register, name="register"),
     url(r'^api/create_event', api_control.create_event, name="create_event"),
+    url(r'^testicek', views.automate_register, name="testicek"),
 ]
