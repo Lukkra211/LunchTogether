@@ -18,23 +18,41 @@
 
 <nav style="background: rgba(0,0,0,0.31)">
     <div class="nav-wrapper container">
-        <a href="/homepage" class="brand-logo center">Lunch Together</a>
+        <a href="" class="brand-logo center">Lunch Together</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="login.html">Login</a></li>
-            <li><a href="register.html">Register</a></li>
+            <li><a href="/logout">Logout</a></li>
         </ul>
     </div>
 </nav>
 
 <main class="container">
     <div class="input-field">
-        <input id="search" placeholder="Search ..." type="search"
-               style="padding-left: 50px; width: calc(100% - 50px); background: rgb(255,255,255);" required>
-        <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+        <form method="POST" action="/search_restaurant">
+            <input id="search" placeholder="Search ..." type="search"
+                   style="padding-left: 50px; width: calc(100% - 50px); background: rgb(255,255,255);" required>
+            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+        </form>
     </div>
+    {% for event in all_events %}
     <div class="row small-preview">
-
+        <div class="col l6 m6 s12">
+            <div class="card hoverable medium">
+                <div class="card-image">
+                    <img src="" style="background: darkred">
+                    <span class="card-title">{{event.name}}</span>
+                    <div class="active-people"></div>
+                </div>
+                <div class="card-content">
+                    <span class="right"> </span>
+                    {{event.note}}
+                    <br><br>
+                    <div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    {% endfor %}
 </main>
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>

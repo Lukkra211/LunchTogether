@@ -1,7 +1,7 @@
 import logging
 
 from django.http import JsonResponse
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 
 from app.models import User, TagRestaurant, Restaurant, Event
 
@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 
 def login(request):
     if request.method == "GET":
+        if request.session["username"]:
+            return redirect("/homepage")
         return render(request, "../templates/login.html")
     if request.method == "POST":
         username = request.POST.get("username", "")
@@ -17,14 +19,15 @@ def login(request):
         logger.error(username)
         for user in User.objects.all():
             if user.right_user(username, password):
-                # account found
                 request.session["username"] = username
-                return JsonResponse({"user_id": user.id})
+                return redirect("/homepage")
         return JsonResponse({"user_id": "-1"})
 
 
 def register(request):
     if request.method == "GET":
+        if request.session["username"]:
+            return redirect("/homepage")
         return render(request, "../templates/register.html")
     if request.method == "POST":
         username = request.POST.get("username", "")
@@ -37,12 +40,14 @@ def register(request):
         if username != "" and password != "":
             request.session['username'] = username
             User(username=username, password=password, mail=mail).save()
-            return HttpResponse("")
+            return redirect("/homepage")
         return HttpResponse("Chyba: zadal prázdný jsi email nebo heslo")
 
 
 def homepage(request):
     if request.method == "GET":
+        if not request.session["username"]:
+            return redirect("/login")
         all_events = Event.objects.all()
         return render(request,"../templates/index.html",{"all_events":all_events})
     if request.method == "POST":
@@ -79,9 +84,12 @@ def search_user(request):
         User.objects.get(username=username).add_friend(friend)
 
         return render(request, '../templates/graphs.static',
-                      {
-                      })
+                      {})
 
+def logout(request):
+    print("test")
+    request.session['username']=""
+    return redirect("/login")
 
 def search_restaurant(request):
     if request.method == "GET":
