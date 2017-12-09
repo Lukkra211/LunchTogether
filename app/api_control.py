@@ -1,11 +1,12 @@
 import logging
-
+import datetime
 from django.http import JsonResponse
 from django.shortcuts import render, HttpResponse
 
-from app.models import User, TagRestaurant, Restaurant, Event
+from app.models import User, TagRestaurant, Restaurant, Event, TagEvent
 
 logger = logging.getLogger(__name__)
+
 
 def register(request):
     if request.method == "GET":
@@ -39,6 +40,7 @@ def login(request):
                 return JsonResponse({"user_id": user.id})
         return JsonResponse({"user_id": "-1"})
 
+
 def search_event(request):
     if request.method == "GET":
         return HttpResponse("Get metoda k ničemu")
@@ -58,3 +60,28 @@ def search_event(request):
             event.filter(tag=tag)
 
         return HttpResponse(event)
+
+
+def create_event(request):
+    if request.method == "GET":
+        return HttpResponse("Get metoda k ničemu")
+    if request.method == "POST":
+        tag = request.POST.get("tag", "")
+        time = request.POST.get("time", "")
+        name = request.POST.get("name", "")
+        note = request.POST.get("note", "")
+        datettime = datetime.datetime.strptime(time.strip(), "%d.%m.%Y %H:%M")
+        Event(time=datettime, name=name, note=note).save()
+        return HttpResponse("")
+
+
+def restaurant_tag(request):
+    name = request.POST.get("name", "")
+    if name != "":
+        TagRestaurant(name=name).save()
+        return HttpResponse("TagRestaurant byl vytvořen")
+    else:
+        return HttpResponse("prázdný name")
+
+
+

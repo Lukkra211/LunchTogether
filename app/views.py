@@ -1,16 +1,14 @@
-import logging
-
-from django.http import JsonResponse
 from django.shortcuts import render, HttpResponse, redirect
-
-from app.models import User, TagRestaurant, Restaurant, Event
+from django.http import JsonResponse
+from app.models import User, Event, Restaurant, TagRestaurant
+import logging
 
 logger = logging.getLogger(__name__)
 
 
 def login(request):
     if request.method == "GET":
-        if request.session["username"]:
+        if "username" in request.session and len(request.session["username"]):
             return redirect("/homepage")
         return render(request, "../templates/login.html")
     if request.method == "POST":
@@ -21,12 +19,12 @@ def login(request):
             if user.right_user(username, password):
                 request.session["username"] = username
                 return redirect("/homepage")
-        return JsonResponse({"user_id": "-1"})
+        return redirect("/login")
 
 
 def register(request):
     if request.method == "GET":
-        if request.session["username"]:
+        if "username" in request.session and len(request.session["username"]):
             return redirect("/homepage")
         return render(request, "../templates/register.html")
     if request.method == "POST":
@@ -44,9 +42,53 @@ def register(request):
         return HttpResponse("Chyba: zadal prázdný jsi email nebo heslo")
 
 
+def get_events(request):
+    user_id = request.POST.get("user_id", "")
+    aktiv_event_id = ""
+    if user_id != "":
+
+        list_event = []
+        for event in Event.objects.all():
+            if event.restaurant:
+                rest = {
+                    "restaurant_id": event.restaurant.id, "name_restaurant": event.restaurant.name,
+                    "rating": {"aggregate_rating": event.restaurant.rating.aggregate_rating,
+                               "rating_text": event.restaurant.rating.rating_text,
+                               "rating_color": event.restaurant.rating.rating_color,
+                               "votes": event.restaurant.rating.votes},
+                    "has_table_booking": event.restaurant.has_table_booking,
+                    "has_online_delivery": event.restaurant.has_online_delivery,
+                    "average_cost_for_two": event.restaurant.average_cost_for_two,
+                    "menu": event.restaurant.menu, "location": {"address": event.restaurant.location.address,
+                                                                "locality": event.restaurant.location.locality,
+                                                                "city": event.restaurant.location.city,
+                                                                "city_id": event.restaurant.location.city_id,
+                                                                "latitude": event.restaurant.location.latitude,
+                                                                "longitude": event.restaurant.location.longitude,
+                                                                "zipcode": event.restaurant.location.zipcode,
+                                                                "locality_verbose": event.restaurant.location.locality_verbose,
+                                                                "country_id": event.restaurant.location.country_id}}
+            else:
+                rest = "není"
+            list_event.append(
+                {"id": event.id, "time": str(event.time), "name": event.name, "note": event.note,
+                 "users": [user.id for user in User.objects.all() if user.event and user.event.id == event.id],
+                 "restaurant": rest})
+
+        list_user = []
+        for user in User.objects.all():
+            event_id = user.event.id if user.event else -1
+            list_user.append({"user_id": user.id, "name": user.username, "event": event_id, "mail": user.mail})
+            if user.id == user_id:
+                aktiv_event_id = user.event.id
+
+        json = {"events": list_event, "users": list_user, "user_belongs_to": aktiv_event_id}
+        return JsonResponse(json)
+
+
 def homepage(request):
     if request.method == "GET":
-        if not request.session["username"]:
+        if not "username" in request.session and len(request.session["username"]):
             return redirect("/login")
         all_events = Event.objects.all()
         return render(request, "../templates/index.html", {"all_events": all_events})
